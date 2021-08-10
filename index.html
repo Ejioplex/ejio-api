@@ -9,10 +9,10 @@
     <meta name="theme-color" content="#eb4034">
     <script>
       var element = document.getElementById('pls')
-      if (interface) {
+      try {
         var raw = interface.getInitSettings();
         element.innerHTML = raw
-      } else {
+      } catch {
          element.innerHTML = "booo"
       }     
     </script>
