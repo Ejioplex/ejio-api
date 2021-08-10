@@ -8,6 +8,10 @@
     <meta name="description" content="The api for all thinks ejio!">
     <meta name="theme-color" content="#eb4034">
     <script>
+      if (!interface) {
+        alert("oof")
+        return;
+      }      
       var raw = interface.getInitSettings();
       
       var http = new XMLHttpRequest();
