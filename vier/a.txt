@@ -1,4 +1,4 @@
-retuen function()
+-- Map Copier
 	local copyWhat = {"Workspace", "Lighting", "ReplicatedStorage", "ReplicatedFirst", "StarterPack", "StarterGui", "StarterPlayer"}
 
 	local copyGroup = Instance.new("Model", game.RobloxReplicatedStorage)
@@ -112,13 +112,12 @@ retuen function()
 
 	decompileS(copyGroup)
 
+	print(game:GetService("HttpService"):JSONEncode(copyGroup))
+
 	if SaveInstance then
-		SaveInstance(copyGroup,SaveMapName.Text..".rbxm")
+		SaveInstance(copyGroup,"test.rbxm")
 	elseif saveinstance then
-		saveinstance(getelysianpath()..SaveMapName.Text..".rbxm",copyGroup)
+		saveinstance("C:\Users\ejioplex\source\t\test.rbxm",copyGroup)
 	end
-	print("The map has been copied.")
-	SaveMapButton.Text = "The map has been saved"
-	wait(5)
-	SaveMapButton.Text = "Save"
-end
+	print("the map has been copied.")
+-- End Copier
