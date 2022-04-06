@@ -2001,7 +2001,7 @@ SaveMapName.Text = tostring(game.PlaceId).."MapCopy"
 SaveMapButton.MouseButton1Click:connect(function()
 	local copyWhat = {}
 
-	local copyGroup = Instance.new("Model",game.ReplicatedStorage)
+	local copyGroup = Instance.new("Model",game.RobloxReplicatedStorage)
 
 	local copyScripts = SaveMapSettings.SaveScripts
 
@@ -4568,7 +4568,7 @@ function rightClickMenu(sObj)
 				updateActions()
 			elseif option == "Paste Into" then
 				if not Option.Modifiable then return end
-				local parent = Selection.List[1] or workspace
+				local parent = Selection.List[1] or game.RobloxReplicatedStorage
 				for i = 1,#clipboard do
 					clipboard[i]:Clone().Parent = parent
 				end
@@ -4576,7 +4576,7 @@ function rightClickMenu(sObj)
 				if not Option.Modifiable then return end
 				local list = Selection:Get()
 				for i = 1,#list do
-					list[i]:Clone().Parent = Selection.List[1].Parent or workspace
+					list[i]:Clone().Parent = Selection.List[1].Parent or game.RobloxReplicatedStorage
 				end
 			elseif option == "Delete" then
 				if not Option.Modifiable then return end
@@ -4589,7 +4589,7 @@ function rightClickMenu(sObj)
 				if not Option.Modifiable then return end
 				local newModel = Instance.new("Model")
 				local list = Selection:Get()
-				newModel.Parent = Selection.List[1].Parent or workspace
+				newModel.Parent = Selection.List[1].Parent or game.RobloxReplicatedStorage
 				for i = 1,#list do
 					list[i].Parent = newModel
 				end
@@ -4601,7 +4601,7 @@ function rightClickMenu(sObj)
 				for i = 1,#list do
 					if list[i]:IsA("Model") then
 						for i2,v2 in pairs(list[i]:GetChildren()) do
-							v2.Parent = list[i].Parent or workspace
+							v2.Parent = list[i].Parent or game.RobloxReplicatedStorage
 							table.insert(ungrouped,v2)
 						end		
 						pcall(delete,list[i])			
@@ -5584,7 +5584,7 @@ local actionButtons do
 	-- PASTE
 	makeButton(ACTION_PASTE,ACTION_PASTE_OVER,"Paste",true,function() return #Selection:Get() > 0 and #clipboard > 0 end).MouseButton1Click:connect(function()
 		if not Option.Modifiable then return end
-		local parent = Selection.List[1] or workspace
+		local parent = Selection.List[1] or game.RobloxReplicatedStorage
 		for i = 1,#clipboard do
 			clipboard[i]:Clone().Parent = parent
 		end
@@ -5774,7 +5774,7 @@ local Workspace = game:GetService("Workspace")
 local Debris = game:GetService("Debris")
 local ContentProvider = game:GetService("ContentProvider")
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("RobloxReplicatedStorage")
 
 -- Functions
 function httpGet(url)
@@ -5848,7 +5848,7 @@ function getRbxApi()
 -- Services
 local HttpService = game:GetService("HttpService")
 local ServerStorage = game:GetService("ServerStorage")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("RobloxReplicatedStorage")
 
 -- Remotes
 --local Remotes = ReplicatedStorage:WaitForChild("OnlineStudio"):WaitForChild("Remotes")
