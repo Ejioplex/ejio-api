@@ -1,123 +1,63 @@
--- Map Copier
-	local copyWhat = {"Workspace", "Lighting", "ReplicatedStorage", "ReplicatedFirst", "StarterPack", "StarterGui", "StarterPlayer"}
+local items = {}
 
-	local copyGroup = Instance.new("Model", game.RobloxReplicatedStorage)
-
-	print("Raspberry Pi's place copier loaded.")
-	print("Copying map of game "..tostring(game.PlaceId)..".")
-
-	function archivable(root)
-		for i,v in pairs(root:GetChildren()) do
-			if not game.Players:GetPlayerFromCharacter(v) then
-				v.Archivable = true
-				archivable(v)
-			end
-		end
+for _, v in pairs(workspace:GetDescendants()) do
+	if v:IsA("BasePart") then
+		table.insert(items, v)
 	end
+end
 
-	function decompileS(root)
-		for i,v in pairs(root:GetChildren()) do
-			pcall(function()
-				if v:IsA("LocalScript") then
-					local isDisabled = v.Disabled
-					v.Disabled = true
-					v.Source = decompile(v)
-					v.Disabled = isDisabled
-				
-					if v.Source == "" then 
-						print("LocalScript "..v.Name.." had a problem decompiling.")
-					else
-						print("LocalScript "..v.Name.." decompiled.")
-					end
-				elseif v:IsA("ModuleScript") then
-					v.Source = decompile(v)
-				
-					if v.Source == "" then 
-						print("ModuleScript "..v.Name.." had a problem decompiling.")
-					else
-						print("ModuleScript "..v.Name.." decompiled.")
-					end
-				end
-			end)
-			decompileS(v)
-		end
-	end
+local encoded
+local out = {}
 
-	for i,v in pairs(copyWhat) do archivable(game[v]) end
-
-	for j,obj in pairs(copyWhat) do
-		if obj ~= "StarterPlayer" then
-			local newFolder = Instance.new("Folder",copyGroup)
-			newFolder.Name = obj
-			for i,v in pairs(game[obj]:GetChildren()) do
-				if v ~= copyGroup then
-					pcall(function()
-						v:Clone().Parent = newFolder
-					end)
-				end
-			end
-		else
-			local newFolder = Instance.new("Model",copyGroup)
-			newFolder.Name = "StarterPlayer"
-			for i,v in pairs(game[obj]:GetChildren()) do
-				local newObj = Instance.new("Folder",newFolder)
-				newObj.Name = v.Name
-				for _,c in pairs(v:GetChildren()) do
-					if c.Name ~= "ControlScript" and c.Name ~= "CameraScript" then
-						c:Clone().Parent = newObj
-					end
-				end
-			end
-		end
+for i, v: BasePart in pairs(items) do
+	local tb = {}
+	
+	tb[1] = v.Color.R
+	tb[2] = v.Color.G
+	tb[3] = v.Color.B
+	tb[4] = v.Material.Value
+	tb[5] = v.Reflectance
+	tb[6] = v.Transparency
+	tb[7] = v.Name
+	tb[8] = v.Size.X
+	tb[9] = v.Size.Y
+	tb[10] = v.Size.Z
+	tb[11] = v.Position.X
+	tb[12] = v.Position.Y
+	tb[13] = v.Position.Z
+	tb[14] = v.Orientation.X
+	tb[15] = v.Orientation.Y
+	tb[16] = v.Orientation.Z
+	tb[17] = v.CanCollide
+	tb[18] = v.Anchored
+	tb[19] = v.ClassName
+	
+	if v:IsA("Part") then
+		tb[20] = v.Shape.Value 
 	end
 	
-	function saveProp(obj,prop,par)
-		local myProp = obj[prop]
-		if type(myProp) == "boolean" then
-			local newProp = Instance.new("BoolValue",par)
-			newProp.Name = prop
-			newProp.Value = myProp
-		elseif type(myProp) == "number" then
-			local newProp = Instance.new("IntValue",par)
-			newProp.Name = prop
-			newProp.Value = myProp
-		elseif type(myProp) == "string" then
-			local newProp = Instance.new("StringValue",par)
-			newProp.Name = prop
-			newProp.Value = myProp
-		elseif type(myProp) == "userdata" then -- Assume Color3
-			pcall(function()
-				local newProp = Instance.new("Color3Value",par)
-				newProp.Name = prop
-				newProp.Value = myProp
-			end)
-		end
+	table.insert(out, tb)
+end
+
+encoded = game:GetService("HttpService"):JSONEncode(out)
+
+local output = ""
+local charcount = 0
+local boxcount = 0
+
+for v in encoded:gmatch(".") do
+	charcount += 1
+	output = output..v
+	if charcount == 16000 then
+		boxcount += 1
+		local abc = Instance.new("TextBox")
+		abc.Position = UDim2.new(0, 0, 0.05 * boxcount, 0)
+		abc.Size = UDim2.new(0.5, 0, 0.05, 0)
+		abc.Text = output
+		abc.TextEditable = true
+		abc.ClearTextOnFocus = false
+		abc.Parent = game.Players.LocalPlayer.PlayerGui.BubbleChat
+		output = ""
+		charcount = 0
 	end
-
-	local lightingProps = Instance.new("Model",copyGroup)
-	lightingProps.Name = "LightingProperties"
-	
-	saveProp(game.Lighting,"Ambient",lightingProps)
-	saveProp(game.Lighting,"Brightness",lightingProps)
-	saveProp(game.Lighting,"ColorShift_Bottom",lightingProps)
-	saveProp(game.Lighting,"ColorShift_Top",lightingProps)
-	saveProp(game.Lighting,"GlobalShadows",lightingProps)
-	saveProp(game.Lighting,"OutdoorAmbient",lightingProps)
-	saveProp(game.Lighting,"Outlines",lightingProps)
-	saveProp(game.Lighting,"GeographicLatitude",lightingProps)
-	saveProp(game.Lighting,"TimeOfDay",lightingProps)
-	saveProp(game.Lighting,"FogColor",lightingProps)
-	saveProp(game.Lighting,"FogEnd",lightingProps)
-	saveProp(game.Lighting,"FogStart",lightingProps)
-
-	decompileS(copyGroup)
-
-	print(game:GetService("HttpService"):JSONEncode(copyGroup))
-
-	if SaveInstance then
-		SaveInstance(copyGroup,"test.rbxm")
-	elseif saveinstance then
-		saveinstance("C:\Users\ejioplex\source\t\test.rbxm",copyGroup)
-	end
-	print("the map has been copied.")
--- End Copier
+end
