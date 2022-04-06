@@ -11,7 +11,7 @@ local out = {}
 
 for i, v: BasePart in pairs(items) do
 	local tb = {}
-	
+
 	tb[1] = v.Color.R
 	tb[2] = v.Color.G
 	tb[3] = v.Color.B
@@ -31,11 +31,11 @@ for i, v: BasePart in pairs(items) do
 	tb[17] = v.CanCollide
 	tb[18] = v.Anchored
 	tb[19] = v.ClassName
-	
+
 	if v:IsA("Part") then
 		tb[20] = v.Shape.Value 
 	end
-	
+
 	table.insert(out, tb)
 end
 
@@ -45,7 +45,7 @@ local output = ""
 local charcount = 0
 local boxcount = 0
 
-for v in encoded:gmatch(".") do
+for _, v in ipairs(encoded:split("")) do
 	charcount += 1
 	output = output..v
 	if charcount == 16000 then
@@ -53,6 +53,7 @@ for v in encoded:gmatch(".") do
 		local abc = Instance.new("TextBox")
 		abc.Position = UDim2.new(0, 0, 0.05 * boxcount, 0)
 		abc.Size = UDim2.new(0.5, 0, 0.05, 0)
+		abc.Name = tostring(boxcount)
 		abc.Text = output
 		abc.TextEditable = true
 		abc.ClearTextOnFocus = false
@@ -61,3 +62,15 @@ for v in encoded:gmatch(".") do
 		charcount = 0
 	end
 end
+
+boxcount += 1
+local abc = Instance.new("TextBox")
+abc.Position = UDim2.new(0, 0, 0.05 * boxcount, 0)
+abc.Size = UDim2.new(0.5, 0, 0.05, 0)
+abc.Text = output
+abc.TextEditable = true
+abc.ClearTextOnFocus = false
+abc.Name = tostring(boxcount)
+abc.Parent = game.Players.LocalPlayer.PlayerGui.BubbleChat
+output = ""
+charcount = 0
